@@ -53,9 +53,9 @@ for (let b = 0; b < BUCKET_COUNT; b++) {
 const KG = KnightsGraph.create(nodes);
 console.log(KG);
 
-function getAvailablePositions(coord) {
+function getAvailablePositions(current) {
 	let positions = [];
-	const [row, col] = coord.split(',').map(Number);
+	const [row, col] = current.split(',').map(Number);
 	const coords = [
 		[row - 2, col - 1],
 		[row - 2, col + 1],
@@ -67,10 +67,12 @@ function getAvailablePositions(coord) {
 		[row + 1, col - 2]
 	];
 
-	return coords.filter(isValid).map(normalize);
+	return coords.filter(isValidFor(current)).map(normalize);
 
-	function isValid(coords) {
-		return coords[0] >= 0 && coords[0] <= 8 && coords[1] >= 0 && coords[1] <= 8;
+	function isValidFor(current) {
+		return coords =>
+			current !== normalize(coords) ||
+			(coords[0] >= 0 && coords[0] <= 8 && coords[1] >= 0 && coords[1] <= 8);
 	}
 
 	function normalize(coordArr) {
